@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>工場構内 工事箇所管理システム</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', 'Meiryo', sans-serif;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    header {
+      background: #16213e;
+      border-bottom: 2px solid #0f3460;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    header h1 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #e94560;
+      letter-spacing: 1px;
+    }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+
+    .badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-admin { background: #e94560; color: #fff; }
+    .badge-view  { background: #0f3460; color: #aaa; }
+
+    .btn {
+      padding: 7px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: opacity .15s;
+    }
+    .btn:hover { opacity: .85; }
+    .btn-primary   { background: #e94560; color: #fff; }
+    .btn-secondary { background: #0f3460; color: #ccc; }
+    .btn-danger    { background: #c0392b; color: #fff; }
+    .btn-success   { background: #27ae60; color: #fff; }
+
+    /* ── Layout ── */
+    .main-layout {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 300px;
+      background: #16213e;
+      border-right: 1px solid #0f3460;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .sidebar-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid #0f3460;
+      font-size: 13px;
+      font-weight: 600;
+      color: #aaa;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .sidebar-count {
+      background: #e94560;
+      color: #fff;
+      border-radius: 10px;
+      padding: 2px 8px;
+      font-size: 11px;
+    }
+    .sidebar-list {
+      overflow-y: auto;
+      flex: 1;
+    }
+    .sidebar-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid #0f3460;
+      cursor: pointer;
+      transition: background .1s;
+    }
+    .sidebar-item:hover { background: #1e2d50; }
+    .sidebar-item.active { background: #1e2d50; border-left: 3px solid #e94560; }
+    .item-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .item-meta { font-size: 11px; color: #888; display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .status-tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .status-ongoing   { background: #e67e22; color: #fff; }
+    .status-planned   { background: #2980b9; color: #fff; }
+    .status-completed { background: #27ae60; color: #fff; }
+    .status-suspended { background: #7f8c8d; color: #fff; }
+
+    /* ── Map Area ── */
+    .map-area {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background: #111827;
+    }
+    .map-container {
+      position: absolute;
+      inset: 0;
+      overflow: auto;
+      cursor: default;
+    }
+    .map-container.add-mode { cursor: crosshair; }
+
+    #factory-map {
+      display: block;
+      width: 100%;
+      min-width: 900px;
+    }
+
+    /* ── Markers ── */
+    .marker {
+      position: absolute;
+      transform: translate(-50%, -100%);
+      cursor: pointer;
+      z-index: 10;
+      transition: transform .15s;
+    }
+    .marker:hover { transform: translate(-50%, -100%) scale(1.15); z-index: 20; }
+    .marker.highlight { transform: translate(-50%, -100%) scale(1.3); z-index: 30; }
+
+    .marker-pin {
+      width: 32px;
+      height: 32px;
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      border: 2px solid rgba(255,255,255,.4);
+      box-shadow: 0 2px 8px rgba(0,0,0,.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .marker-pin span {
+      transform: rotate(45deg);
+      font-size: 14px;
+    }
+    .marker.status-ongoing   .marker-pin { background: #e67e22; }
+    .marker.status-planned   .marker-pin { background: #2980b9; }
+    .marker.status-completed .marker-pin { background: #27ae60; }
+    .marker.status-suspended .marker-pin { background: #7f8c8d; }
+
+    .marker-label {
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100%);
+      background: rgba(0,0,0,.75);
+      color: #fff;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 11px;
+      white-space: nowrap;
+      pointer-events: none;
+      display: none;
+    }
+    .marker:hover .marker-label { display: block; }
+
+    /* ── Add-mode hint ── */
+    .add-mode-hint {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #e94560;
+      color: #fff;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      pointer-events: none;
+      display: none;
+      z-index: 100;
+    }
+
+    /* ── Popup ── */
+    .popup {
+      position: absolute;
+      background: #16213e;
+      border: 1px solid #0f3460;
+      border-radius: 8px;
+      padding: 14px;
+      min-width: 220px;
+      max-width: 280px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.6);
+      z-index: 50;
+    }
+    .popup h3 { font-size: 14px; margin-bottom: 6px; color: #fff; }
+    .popup p  { font-size: 12px; color: #aaa; margin-bottom: 4px; }
+    .popup .popup-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.7);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #16213e;
+      border: 1px solid #0f3460;
+      border-radius: 10px;
+      padding: 24px;
+      width: 460px;
+      max-width: 95vw;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal h2 { font-size: 16px; margin-bottom: 18px; color: #e94560; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 6px; }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: #0f1e35;
+      border: 1px solid #0f3460;
+      border-radius: 6px;
+      color: #e0e0e0;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-family: inherit;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #e94560;
+    }
+    .form-group textarea { resize: vertical; min-height: 70px; }
+    .form-row { display: flex; gap: 12px; }
+    .form-row .form-group { flex: 1; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; }
+
+    /* ── Legend ── */
+    .legend {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(22,33,62,.9);
+      border: 1px solid #0f3460;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12px;
+      z-index: 40;
+    }
+    .legend-title { color: #aaa; margin-bottom: 6px; font-weight: 600; }
+    .legend-item { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; }
+    .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: #0f3460; border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- ===== Header ===== -->
+<header>
+  <h1>&#127981; 工場構内 工事箇所管理システム</h1>
+  <div class="header-right">
+    <span id="mode-badge" class="badge badge-view">閲覧モード</span>
+    <button class="btn btn-secondary" id="toggle-admin-btn" onclick="toggleAdmin()">管理者ログイン</button>
+    <button class="btn btn-primary" id="add-btn" style="display:none" onclick="startAddMode()">＋ 工事箇所追加</button>
+  </div>
+</header>
+
+<!-- ===== Main Layout ===== -->
+<div class="main-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      工事箇所一覧
+      <span class="sidebar-count" id="sidebar-count">0</span>
+    </div>
+    <div class="sidebar-list" id="sidebar-list"></div>
+  </aside>
+
+  <!-- Map -->
+  <div class="map-area">
+    <div class="map-container" id="map-container" onclick="onMapClick(event)">
+
+      <!-- SVG Factory Map -->
+      <svg id="factory-map" viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg">
+        <rect width="900" height="620" fill="#111827"/>
+        <defs>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e2d50" stroke-width=".5"/>
+          </pattern>
+        </defs>
+        <rect width="900" height="620" fill="url(#grid)"/>
+
+        <!-- 外壁 -->
+        <rect x="30" y="30" width="840" height="560" rx="4" fill="none" stroke="#2a4a7f" stroke-width="3"/>
+
+        <!-- 通路 -->
+        <rect x="30"  y="200" width="840" height="60" fill="#1a2744" stroke="#2a4a7f" stroke-width="1"/>
+        <rect x="30"  y="380" width="840" height="60" fill="#1a2744" stroke="#2a4a7f" stroke-width="1"/>
+        <rect x="200" y="30"  width="60"  height="560" fill="#1a2744" stroke="#2a4a7f" stroke-width="1"/>
+        <rect x="640" y="30"  width="60"  height="560" fill="#1a2744" stroke="#2a4a7f" stroke-width="1"/>
+        <line x1="30" y1="230" x2="870" y2="230" stroke="#3a5a8f" stroke-width="1" stroke-dasharray="20,10"/>
+        <line x1="30" y1="410" x2="870" y2="410" stroke="#3a5a8f" stroke-width="1" stroke-dasharray="20,10"/>
+        <line x1="230" y1="30" x2="230" y2="590" stroke="#3a5a8f" stroke-width="1" stroke-dasharray="20,10"/>
+        <line x1="670" y1="30" x2="670" y2="590" stroke="#3a5a8f" stroke-width="1" stroke-dasharray="20,10"/>
+
+        <!-- 通路ラベル -->
+        <text x="450" y="225" text-anchor="middle" fill="#3a5a8f" font-size="10">主通路 (東西)</text>
+        <text x="450" y="405" text-anchor="middle" fill="#3a5a8f" font-size="10">主通路 (東西)</text>
+        <text x="230" y="95" text-anchor="middle" fill="#3a5a8f" font-size="10" transform="rotate(-90,230,95)">通路</text>
+        <text x="670" y="95" text-anchor="middle" fill="#3a5a8f" font-size="10" transform="rotate(-90,670,95)">通路</text>
+
+        <!-- 棟A: 第1工場 -->
+        <rect x="40" y="40" width="150" height="150" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
+        <text x="115" y="105" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">第1工場</text>
+        <text x="115" y="123" text-anchor="middle" fill="#4a7abf" font-size="10">棟A</text>
+        <rect x="55"  y="55"  width="28" height="18" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="93"  y="55"  width="28" height="18" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="131" y="55"  width="28" height="18" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="55"  y="83"  width="28" height="18" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="93"  y="83"  width="28" height="18" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="131" y="83"  width="28" height="18" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="55"  y="145" width="28" height="32" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="131" y="145" width="28" height="32" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+
+        <!-- 棟B: 第2工場 (組立) -->
+        <rect x="270" y="40" width="360" height="150" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
+        <text x="450" y="95" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">第2工場（組立エリア）</text>
+        <text x="450" y="113" text-anchor="middle" fill="#4a7abf" font-size="10">棟B</text>
+        <line x1="290" y1="145" x2="610" y2="145" stroke="#4a7abf" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="290" cy="145" r="8" fill="none" stroke="#4a7abf" stroke-width="2"/>
+        <circle cx="610" cy="145" r="8" fill="none" stroke="#4a7abf" stroke-width="2"/>
+        <text x="450" y="142" text-anchor="middle" fill="#3a5a8f" font-size="9">コンベアライン</text>
+        <rect x="285" y="55" width="50" height="60" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="350" y="55" width="50" height="60" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="415" y="55" width="50" height="60" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="480" y="55" width="50" height="60" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="545" y="55" width="50" height="60" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+
+        <!-- 棟C: 倉庫 -->
+        <rect x="710" y="40" width="150" height="150" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
+        <text x="785" y="105" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">倉庫</text>
+        <text x="785" y="123" text-anchor="middle" fill="#4a7abf" font-size="10">棟C</text>
+        <line x1="720" y1="65"  x2="852" y2="65"  stroke="#4a7abf" stroke-width="2"/>
+        <line x1="720" y1="85"  x2="852" y2="85"  stroke="#4a7abf" stroke-width="2"/>
+        <line x1="720" y1="105" x2="852" y2="105" stroke="#4a7abf" stroke-width="2"/>
+        <line x1="720" y1="125" x2="852" y2="125" stroke="#4a7abf" stroke-width="2"/>
+        <line x1="720" y1="145" x2="852" y2="145" stroke="#4a7abf" stroke-width="2"/>
+        <line x1="720" y1="65"  x2="720" y2="175" stroke="#4a7abf" stroke-width="2"/>
+        <line x1="760" y1="65"  x2="760" y2="175" stroke="#4a7abf" stroke-width="2"/>
+        <line x1="810" y1="65"  x2="810" y2="175" stroke="#4a7abf" stroke-width="2"/>
+        <line x1="852" y1="65"  x2="852" y2="175" stroke="#4a7abf" stroke-width="2"/>
+
+        <!-- 棟D: 電気室 -->
+        <rect x="40" y="270" width="150" height="100" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
+        <text x="115" y="318" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">電気室</text>
+        <text x="115" y="335" text-anchor="middle" fill="#4a7abf" font-size="10">棟D</text>
+        <rect x="60" y="280" width="30" height="40" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="100" y="280" width="30" height="40" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="140" y="280" width="30" height="40" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+
+        <!-- 棟E: 検査室 -->
+        <rect x="270" y="270" width="160" height="100" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
+        <text x="350" y="315" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">検査室</text>
+        <text x="350" y="332" text-anchor="middle" fill="#4a7abf" font-size="10">棟E</text>
+
+        <!-- 棟F: 塗装工場 -->
+        <rect x="450" y="270" width="180" height="100" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
+        <text x="540" y="315" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">塗装工場</text>
+        <text x="540" y="332" text-anchor="middle" fill="#4a7abf" font-size="10">棟F</text>
+
+        <!-- 棟G: 資材置場 -->
+        <rect x="710" y="270" width="150" height="100" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
+        <text x="785" y="315" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">資材置場</text>
+        <text x="785" y="332" text-anchor="middle" fill="#4a7abf" font-size="10">棟G</text>
+
+        <!-- 棟H: 事務棟 -->
+        <rect x="40" y="450" width="150" height="120" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
+        <text x="115" y="505" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">事務棟</text>
+        <text x="115" y="522" text-anchor="middle" fill="#4a7abf" font-size="10">棟H</text>
+
+        <!-- 棟I: 第3工場 -->
+        <rect x="270" y="450" width="360" height="120" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
+        <text x="450" y="505" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">第3工場（加工エリア）</text>
+        <text x="450" y="522" text-anchor="middle" fill="#4a7abf" font-size="10">棟I</text>
+        <rect x="285" y="460" width="40" height="50" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="340" y="460" width="40" height="50" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="395" y="460" width="40" height="50" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="450" y="460" width="40" height="50" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="505" y="460" width="40" height="50" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="560" y="460" width="40" height="50" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+
+        <!-- 棟J: 搬入口 -->
+        <rect x="710" y="450" width="150" height="120" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
+        <text x="785" y="500" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">駐車場</text>
+        <text x="785" y="518" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">搬入口</text>
+        <text x="785" y="535" text-anchor="middle" fill="#4a7abf" font-size="10">棟J</text>
+
+        <!-- 出入口 -->
+        <rect x="390" y="27" width="60" height="6" fill="#e94560" rx="2"/>
+        <text x="420" y="22" text-anchor="middle" fill="#e94560" font-size="9" font-weight="bold">正門</text>
+        <rect x="390" y="587" width="60" height="6" fill="#e67e22" rx="2"/>
+        <text x="420" y="600" text-anchor="middle" fill="#e67e22" font-size="9" font-weight="bold">通用門</text>
+
+        <!-- 方位 -->
+        <text x="858" y="595" fill="#4a7abf" font-size="11" text-anchor="end">N ↑</text>
+      </svg>
+
+      <!-- Markers -->
+      <div id="markers-layer" style="position:absolute;inset:0;pointer-events:none"></div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-title">凡例</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#e67e22"></div>施工中</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#2980b9"></div>予定</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#27ae60"></div>完了</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#7f8c8d"></div>中断</div>
+    </div>
+
+    <!-- Add mode hint -->
+    <div class="add-mode-hint" id="add-mode-hint">
+      マップ上をクリックして工事箇所を配置　[Esc] でキャンセル
+    </div>
+
+    <!-- Popup -->
+    <div class="popup" id="popup" style="display:none">
+      <h3 id="popup-name"></h3>
+      <p id="popup-location"></p>
+      <p id="popup-period"></p>
+      <p id="popup-contractor"></p>
+      <p id="popup-desc"></p>
+      <div class="popup-actions" id="popup-actions" style="display:none">
+        <button class="btn btn-secondary" style="font-size:11px;padding:5px 10px" onclick="editFromPopup()">編集</button>
+        <button class="btn btn-danger"    style="font-size:11px;padding:5px 10px" onclick="deleteFromPopup()">削除</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Edit / Add Modal ===== -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <h2 id="modal-title">工事箇所を追加</h2>
+    <div class="form-group">
+      <label>工事名称 *</label>
+      <input type="text" id="f-name" placeholder="例: 排水管更新工事">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>エリア / 棟</label>
+        <input type="text" id="f-location" placeholder="例: 第2工場 棟B">
+      </div>
+      <div class="form-group">
+        <label>ステータス</label>
+        <select id="f-status">
+          <option value="planned">予定</option>
+          <option value="ongoing">施工中</option>
+          <option value="completed">完了</option>
+          <option value="suspended">中断</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>開始日</label>
+        <input type="date" id="f-start">
+      </div>
+      <div class="form-group">
+        <label>終了予定日</label>
+        <input type="date" id="f-end">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>担当会社 / 担当者</label>
+      <input type="text" id="f-contractor" placeholder="例: ○○建設 田中">
+    </div>
+    <div class="form-group">
+      <label>工事概要</label>
+      <textarea id="f-desc" placeholder="工事内容の詳細を入力"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">キャンセル</button>
+      <button class="btn btn-success"   onclick="saveConstruction()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Admin Login Modal ===== -->
+<div class="modal-overlay" id="login-overlay">
+  <div class="modal" style="width:340px">
+    <h2>管理者ログイン</h2>
+    <div class="form-group">
+      <label>パスワード</label>
+      <input type="password" id="admin-pw" placeholder="パスワードを入力" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <p style="font-size:11px;color:#888;margin-bottom:12px">デモ用パスワード: <code style="color:#e94560">admin123</code></p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeLoginModal()">キャンセル</button>
+      <button class="btn btn-primary"   onclick="doLogin()">ログイン</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ====================================================
+//  DATA
+// ====================================================
+const STORAGE_KEY = 'factory_constructions_v1';
+
+function loadData() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { return []; }
+}
+function saveData(d) { localStorage.setItem(STORAGE_KEY, JSON.stringify(d)); }
+function generateId() { return 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2,6); }
+
+function seedIfEmpty() {
+  if (loadData().length > 0) return;
+  saveData([
+    { id: generateId(), name: '排水管更新工事', location: '第2工場 棟B', status: 'ongoing',
+      start: '2026-04-01', end: '2026-05-15', contractor: '○○建設 田中',
+      desc: '老朽化した排水管の更新。作業中は周辺通路を一部規制。', x: 450, y: 145 },
+    { id: generateId(), name: '電気設備増設工事', location: '電気室 棟D', status: 'planned',
+      start: '2026-05-20', end: '2026-06-30', contractor: '△△電工 鈴木',
+      desc: '生産ライン増設に伴う配電盤の増設工事。', x: 115, y: 320 },
+    { id: generateId(), name: '外壁塗装工事', location: '倉庫 棟C', status: 'completed',
+      start: '2026-03-01', end: '2026-04-10', contractor: '□□塗装',
+      desc: '外壁の経年劣化に伴う塗り替え工事。完了済み。', x: 785, y: 115 },
+    { id: generateId(), name: 'コンベア改修', location: '第2工場 棟B', status: 'ongoing',
+      start: '2026-04-10', end: '2026-04-28', contractor: 'メーカーサービス',
+      desc: 'ベルトコンベア No.3 の駆動部交換。夜間作業。', x: 340, y: 80 },
+    { id: generateId(), name: '床面補修工事', location: '第3工場 棟I', status: 'planned',
+      start: '2026-06-01', end: '2026-06-15', contractor: '××補修工業',
+      desc: 'フォークリフト走行路の床面ひび割れ補修。', x: 450, y: 510 },
+  ]);
+}
+
+// ====================================================
+//  STATE
+// ====================================================
+let isAdmin = false, addMode = false;
+let pendingXY = null, editingId = null, activeId = null, popupTargetId = null;
+let hideTimer = null;
+
+const statusLabel = { ongoing:'施工中', planned:'予定', completed:'完了', suspended:'中断' };
+const statusEmoji = { ongoing:'🔨', planned:'📋', completed:'✅', suspended:'⏸' };
+
+// ====================================================
+//  INIT
+// ====================================================
+seedIfEmpty();
+renderAll();
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { cancelAddMode(); closeModal(); closePopup(); }
+});
+window.addEventListener('resize', () => renderMarkers());
+
+// ====================================================
+//  RENDER
+// ====================================================
+function renderAll() { renderMarkers(); renderSidebar(); }
+
+function renderMarkers() {
+  const layer = document.getElementById('markers-layer');
+  const svg   = document.getElementById('factory-map');
+  const svgRect = svg.getBoundingClientRect();
+  const vb    = svg.viewBox.baseVal;
+  const scaleX = svgRect.width  / vb.width;
+  const scaleY = svgRect.height / vb.height;
+
+  layer.innerHTML = '';
+  loadData().forEach(c => {
+    const px = c.x * scaleX;
+    const py = c.y * scaleY;
+    const el = document.createElement('div');
+    el.className = `marker status-${c.status}${activeId === c.id ? ' highlight' : ''}`;
+    el.style.cssText = `left:${px}px;top:${py}px;pointer-events:all;`;
+    el.dataset.id = c.id;
+    el.innerHTML = `
+      <div class="marker-pin"><span>${statusEmoji[c.status] || '📍'}</span></div>
+      <div class="marker-label">${escHtml(c.name)}</div>`;
+    el.addEventListener('click',      e => { e.stopPropagation(); showPopup(c.id, el); });
+    el.addEventListener('mouseenter', () => showPopup(c.id, el));
+    el.addEventListener('mouseleave', () => scheduleHidePopup());
+    layer.appendChild(el);
+  });
+}
+
+function renderSidebar() {
+  const data = loadData();
+  document.getElementById('sidebar-count').textContent = data.length;
+  const list = document.getElementById('sidebar-list');
+  if (!data.length) {
+    list.innerHTML = '<div style="padding:20px;color:#555;font-size:13px;text-align:center">工事箇所がありません</div>';
+    return;
+  }
+  const order = { ongoing:0, planned:1, completed:2, suspended:3 };
+  const sorted = [...data].sort((a,b) => order[a.status] - order[b.status]);
+  list.innerHTML = sorted.map(c => `
+    <div class="sidebar-item${activeId===c.id?' active':''}" onclick="selectConstruction('${c.id}')">
+      <div class="item-name">${escHtml(c.name)}</div>
+      <div class="item-meta">
+        <span class="status-tag status-${c.status}">${statusLabel[c.status]}</span>
+        ${c.location ? `<span>📍 ${escHtml(c.location)}</span>` : ''}
+        ${c.end ? `<span>〜 ${c.end}</span>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+// ====================================================
+//  POPUP
+// ====================================================
+function showPopup(id, el) {
+  clearTimeout(hideTimer);
+  const c = loadData().find(x => x.id === id);
+  if (!c) return;
+  popupTargetId = id;
+
+  document.getElementById('popup-name').textContent       = c.name;
+  document.getElementById('popup-location').textContent   = c.location   ? '📍 ' + c.location : '';
+  document.getElementById('popup-period').textContent     = (c.start||c.end) ? `📅 ${c.start||'?'} 〜 ${c.end||'?'}` : '';
+  document.getElementById('popup-contractor').textContent = c.contractor  ? '👷 ' + c.contractor : '';
+  document.getElementById('popup-desc').textContent       = c.desc || '';
+  document.getElementById('popup-actions').style.display  = isAdmin ? 'flex' : 'none';
+
+  const container = document.getElementById('map-container');
+  const cRect  = container.getBoundingClientRect();
+  const elRect = el.getBoundingClientRect();
+  const popup  = document.getElementById('popup');
+  popup.style.display = 'block';
+  popup.style.left = (elRect.left - cRect.left + 20) + 'px';
+  popup.style.top  = (elRect.top  - cRect.top  - 10 + container.scrollTop) + 'px';
+  popup.onmouseenter = () => clearTimeout(hideTimer);
+  popup.onmouseleave = () => scheduleHidePopup();
+}
+
+function scheduleHidePopup() { hideTimer = setTimeout(closePopup, 300); }
+function closePopup() { document.getElementById('popup').style.display = 'none'; popupTargetId = null; }
+
+function selectConstruction(id) {
+  activeId = id;
+  renderAll();
+  const el = document.querySelector(`.marker[data-id="${id}"]`);
+  if (el) showPopup(id, el);
+}
+
+// ====================================================
+//  ADMIN
+// ====================================================
+function toggleAdmin() {
+  if (isAdmin) { isAdmin = false; updateAdminUI(); return; }
+  document.getElementById('login-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('admin-pw').focus(), 100);
+}
+
+function doLogin() {
+  if (document.getElementById('admin-pw').value === 'admin123') {
+    isAdmin = true;
+    document.getElementById('admin-pw').value = '';
+    document.getElementById('login-overlay').classList.remove('open');
+    updateAdminUI();
+  } else {
+    const pw = document.getElementById('admin-pw');
+    pw.style.border = '1px solid #e94560';
+    pw.value = '';
+    setTimeout(() => pw.style.border = '', 800);
+  }
+}
+
+function closeLoginModal() {
+  document.getElementById('login-overlay').classList.remove('open');
+  document.getElementById('admin-pw').value = '';
+}
+
+function updateAdminUI() {
+  document.getElementById('mode-badge').textContent  = isAdmin ? '管理者モード' : '閲覧モード';
+  document.getElementById('mode-badge').className    = 'badge ' + (isAdmin ? 'badge-admin' : 'badge-view');
+  document.getElementById('toggle-admin-btn').textContent = isAdmin ? 'ログアウト' : '管理者ログイン';
+  document.getElementById('toggle-admin-btn').className   = isAdmin ? 'btn btn-danger' : 'btn btn-secondary';
+  document.getElementById('add-btn').style.display = isAdmin ? '' : 'none';
+  renderAll();
+}
+
+// ====================================================
+//  ADD MODE
+// ====================================================
+function startAddMode() {
+  addMode = true;
+  document.getElementById('map-container').classList.add('add-mode');
+  document.getElementById('add-mode-hint').style.display = 'block';
+}
+
+function cancelAddMode() {
+  addMode = false;
+  pendingXY = null;
+  document.getElementById('map-container').classList.remove('add-mode');
+  document.getElementById('add-mode-hint').style.display = 'none';
+}
+
+function onMapClick(e) {
+  if (!isAdmin || !addMode) return;
+  const svg   = document.getElementById('factory-map');
+  const rect  = svg.getBoundingClientRect();
+  const vb    = svg.viewBox.baseVal;
+  const scaleX = vb.width  / rect.width;
+  const scaleY = vb.height / rect.height;
+  const cont  = document.getElementById('map-container');
+  pendingXY = {
+    x: Math.round((e.clientX - rect.left  + cont.scrollLeft) * scaleX),
+    y: Math.round((e.clientY - rect.top   + cont.scrollTop)  * scaleY),
+  };
+  cancelAddMode();
+  openModal(null);
+}
+
+// ====================================================
+//  MODAL
+// ====================================================
+function openModal(id) {
+  editingId = id;
+  const c = id ? loadData().find(x => x.id === id) : null;
+  document.getElementById('modal-title').textContent  = id ? '工事箇所を編集' : '工事箇所を追加';
+  document.getElementById('f-name').value        = c?.name        || '';
+  document.getElementById('f-location').value    = c?.location    || '';
+  document.getElementById('f-status').value      = c?.status      || 'planned';
+  document.getElementById('f-start').value       = c?.start       || '';
+  document.getElementById('f-end').value         = c?.end         || '';
+  document.getElementById('f-contractor').value  = c?.contractor  || '';
+  document.getElementById('f-desc').value        = c?.desc        || '';
+  document.getElementById('modal-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('f-name').focus(), 100);
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  editingId = null;
+  pendingXY = null;
+}
+
+function saveConstruction() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) {
+    const el = document.getElementById('f-name');
+    el.style.border = '1px solid #e94560';
+    setTimeout(() => el.style.border = '', 600);
+    return;
+  }
+  const data = loadData();
+  const entry = {
+    name,
+    location:   document.getElementById('f-location').value.trim(),
+    status:     document.getElementById('f-status').value,
+    start:      document.getElementById('f-start').value,
+    end:        document.getElementById('f-end').value,
+    contractor: document.getElementById('f-contractor').value.trim(),
+    desc:       document.getElementById('f-desc').value.trim(),
+  };
+  if (editingId) {
+    const idx = data.findIndex(x => x.id === editingId);
+    if (idx >= 0) data[idx] = { ...data[idx], ...entry };
+  } else {
+    data.push({ id: generateId(), ...entry, x: pendingXY?.x ?? 450, y: pendingXY?.y ?? 310 });
+  }
+  saveData(data);
+  closeModal();
+  renderAll();
+}
+
+// ====================================================
+//  EDIT / DELETE from popup
+// ====================================================
+function editFromPopup() {
+  const id = popupTargetId;
+  closePopup();
+  openModal(id);
+}
+
+function deleteFromPopup() {
+  const id = popupTargetId;
+  if (!id) return;
+  const c = loadData().find(x => x.id === id);
+  if (!c || !confirm(`「${c.name}」を削除しますか？`)) return;
+  const newData = loadData().filter(x => x.id !== id);
+  saveData(newData);
+  if (activeId === id) activeId = null;
+  closePopup();
+  renderAll();
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
