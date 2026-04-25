@@ -9,8 +9,8 @@
 
     body {
       font-family: 'Segoe UI', 'Meiryo', sans-serif;
-      background: #1a1a2e;
-      color: #e0e0e0;
+      background: #eef3fb;
+      color: #1a2540;
       height: 100vh;
       display: flex;
       flex-direction: column;
@@ -18,8 +18,8 @@
 
     /* ── Header ── */
     header {
-      background: #16213e;
-      border-bottom: 2px solid #0f3460;
+      background: #1d3a6e;
+      border-bottom: 2px solid #2a5aaa;
       padding: 12px 20px;
       display: flex;
       align-items: center;
@@ -41,7 +41,7 @@
       font-weight: 600;
     }
     .badge-admin { background: #e94560; color: #fff; }
-    .badge-view  { background: #0f3460; color: #aaa; }
+    .badge-view  { background: #dce8f8; color: #2a5aa0; }
 
     .btn {
       padding: 7px 16px;
@@ -54,7 +54,7 @@
     }
     .btn:hover { opacity: .85; }
     .btn-primary   { background: #e94560; color: #fff; }
-    .btn-secondary { background: #0f3460; color: #ccc; }
+    .btn-secondary { background: #dce8f8; color: #2a5aa0; }
     .btn-danger    { background: #c0392b; color: #fff; }
     .btn-success   { background: #27ae60; color: #fff; }
 
@@ -68,8 +68,8 @@
     /* ── Sidebar ── */
     .sidebar {
       width: 300px;
-      background: #16213e;
-      border-right: 1px solid #0f3460;
+      background: #ffffff;
+      border-right: 1px solid #c5d8f0;
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
@@ -77,10 +77,10 @@
     }
     .sidebar-header {
       padding: 14px 16px;
-      border-bottom: 1px solid #0f3460;
+      border-bottom: 1px solid #c5d8f0;
       font-size: 13px;
       font-weight: 600;
-      color: #aaa;
+      color: #5a7aaf;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -98,14 +98,14 @@
     }
     .sidebar-item {
       padding: 12px 16px;
-      border-bottom: 1px solid #0f3460;
+      border-bottom: 1px solid #dce8f8;
       cursor: pointer;
       transition: background .1s;
     }
-    .sidebar-item:hover { background: #1e2d50; }
-    .sidebar-item.active { background: #1e2d50; border-left: 3px solid #e94560; }
+    .sidebar-item:hover { background: #eaf2fb; }
+    .sidebar-item.active { background: #d8eafa; border-left: 3px solid #e94560; }
     .item-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
-    .item-meta { font-size: 11px; color: #888; display: flex; gap: 8px; flex-wrap: wrap; }
+    .item-meta { font-size: 11px; color: #7a92b0; display: flex; gap: 8px; flex-wrap: wrap; }
 
     .status-tag {
       display: inline-block;
@@ -124,7 +124,7 @@
       flex: 1;
       position: relative;
       overflow: hidden;
-      background: #111827;
+      background: #d8e8f8;
     }
     .map-container {
       position: absolute;
@@ -207,8 +207,8 @@
     /* ── Popup ── */
     .popup {
       position: absolute;
-      background: #16213e;
-      border: 1px solid #0f3460;
+      background: #ffffff;
+      border: 1px solid #c5d8f0;
       border-radius: 8px;
       padding: 14px;
       min-width: 220px;
@@ -216,8 +216,8 @@
       box-shadow: 0 4px 20px rgba(0,0,0,.6);
       z-index: 50;
     }
-    .popup h3 { font-size: 14px; margin-bottom: 6px; color: #fff; }
-    .popup p  { font-size: 12px; color: #aaa; margin-bottom: 4px; }
+    .popup h3 { font-size: 14px; margin-bottom: 6px; color: #1a2540; }
+    .popup p  { font-size: 12px; color: #5a7aaf; margin-bottom: 4px; }
     .popup .popup-actions {
       display: flex;
       gap: 6px;
@@ -236,8 +236,8 @@
     }
     .modal-overlay.open { display: flex; }
     .modal {
-      background: #16213e;
-      border: 1px solid #0f3460;
+      background: #ffffff;
+      border: 1px solid #c5d8f0;
       border-radius: 10px;
       padding: 24px;
       width: 460px;
@@ -247,15 +247,15 @@
     }
     .modal h2 { font-size: 16px; margin-bottom: 18px; color: #e94560; }
     .form-group { margin-bottom: 14px; }
-    .form-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 6px; }
+    .form-group label { display: block; font-size: 12px; color: #5a7aaf; margin-bottom: 6px; }
     .form-group input,
     .form-group select,
     .form-group textarea {
       width: 100%;
-      background: #0f1e35;
-      border: 1px solid #0f3460;
+      background: #f5f8fc;
+      border: 1px solid #c5d8f0;
       border-radius: 6px;
-      color: #e0e0e0;
+      color: #1a2540;
       padding: 8px 10px;
       font-size: 13px;
       font-family: inherit;
@@ -276,14 +276,14 @@
       position: absolute;
       top: 12px;
       right: 12px;
-      background: rgba(22,33,62,.9);
-      border: 1px solid #0f3460;
+      background: rgba(255,255,255,.95);
+      border: 1px solid #c5d8f0;
       border-radius: 8px;
       padding: 10px 14px;
       font-size: 12px;
       z-index: 40;
     }
-    .legend-title { color: #aaa; margin-bottom: 6px; font-weight: 600; }
+    .legend-title { color: #5a7aaf; margin-bottom: 6px; font-weight: 600; }
     .legend-item { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; }
     .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
 
@@ -296,8 +296,8 @@
     }
 
     ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #111; }
-    ::-webkit-scrollbar-thumb { background: #0f3460; border-radius: 3px; }
+    ::-webkit-scrollbar-track { background: #dde8f5; }
+    ::-webkit-scrollbar-thumb { background: #7aaad8; border-radius: 3px; }
   </style>
 </head>
 <body>
@@ -330,118 +330,118 @@
 
       <!-- SVG Factory Map -->
       <svg id="factory-map" viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg">
-        <rect width="900" height="620" fill="#111827"/>
+        <rect width="900" height="620" fill="#d8e8f8"/>
         <defs>
           <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e2d50" stroke-width=".5"/>
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#b0c8e8" stroke-width=".5"/>
           </pattern>
         </defs>
         <rect width="900" height="620" fill="url(#grid)"/>
 
         <!-- 外壁 -->
-        <rect x="30" y="30" width="840" height="560" rx="4" fill="none" stroke="#2a4a7f" stroke-width="3"/>
+        <rect x="30" y="30" width="840" height="560" rx="4" fill="none" stroke="#6a9ad8" stroke-width="3"/>
 
         <!-- 通路 -->
-        <rect x="30"  y="200" width="840" height="60" fill="#1a2744" stroke="#2a4a7f" stroke-width="1"/>
-        <rect x="30"  y="380" width="840" height="60" fill="#1a2744" stroke="#2a4a7f" stroke-width="1"/>
-        <rect x="200" y="30"  width="60"  height="560" fill="#1a2744" stroke="#2a4a7f" stroke-width="1"/>
-        <rect x="640" y="30"  width="60"  height="560" fill="#1a2744" stroke="#2a4a7f" stroke-width="1"/>
-        <line x1="30" y1="230" x2="870" y2="230" stroke="#3a5a8f" stroke-width="1" stroke-dasharray="20,10"/>
-        <line x1="30" y1="410" x2="870" y2="410" stroke="#3a5a8f" stroke-width="1" stroke-dasharray="20,10"/>
-        <line x1="230" y1="30" x2="230" y2="590" stroke="#3a5a8f" stroke-width="1" stroke-dasharray="20,10"/>
-        <line x1="670" y1="30" x2="670" y2="590" stroke="#3a5a8f" stroke-width="1" stroke-dasharray="20,10"/>
+        <rect x="30"  y="200" width="840" height="60" fill="#b8d0ec" stroke="#6a9ad8" stroke-width="1"/>
+        <rect x="30"  y="380" width="840" height="60" fill="#b8d0ec" stroke="#6a9ad8" stroke-width="1"/>
+        <rect x="200" y="30"  width="60"  height="560" fill="#b8d0ec" stroke="#6a9ad8" stroke-width="1"/>
+        <rect x="640" y="30"  width="60"  height="560" fill="#b8d0ec" stroke="#6a9ad8" stroke-width="1"/>
+        <line x1="30" y1="230" x2="870" y2="230" stroke="#7aaad8" stroke-width="1" stroke-dasharray="20,10"/>
+        <line x1="30" y1="410" x2="870" y2="410" stroke="#7aaad8" stroke-width="1" stroke-dasharray="20,10"/>
+        <line x1="230" y1="30" x2="230" y2="590" stroke="#7aaad8" stroke-width="1" stroke-dasharray="20,10"/>
+        <line x1="670" y1="30" x2="670" y2="590" stroke="#7aaad8" stroke-width="1" stroke-dasharray="20,10"/>
 
         <!-- 通路ラベル -->
-        <text x="450" y="225" text-anchor="middle" fill="#3a5a8f" font-size="10">主通路 (東西)</text>
-        <text x="450" y="405" text-anchor="middle" fill="#3a5a8f" font-size="10">主通路 (東西)</text>
-        <text x="230" y="95" text-anchor="middle" fill="#3a5a8f" font-size="10" transform="rotate(-90,230,95)">通路</text>
-        <text x="670" y="95" text-anchor="middle" fill="#3a5a8f" font-size="10" transform="rotate(-90,670,95)">通路</text>
+        <text x="450" y="225" text-anchor="middle" fill="#5a88c0" font-size="10">主通路 (東西)</text>
+        <text x="450" y="405" text-anchor="middle" fill="#5a88c0" font-size="10">主通路 (東西)</text>
+        <text x="230" y="95" text-anchor="middle" fill="#5a88c0" font-size="10" transform="rotate(-90,230,95)">通路</text>
+        <text x="670" y="95" text-anchor="middle" fill="#5a88c0" font-size="10" transform="rotate(-90,670,95)">通路</text>
 
         <!-- 棟A: 第1工場 -->
-        <rect x="40" y="40" width="150" height="150" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
-        <text x="115" y="105" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">第1工場</text>
-        <text x="115" y="123" text-anchor="middle" fill="#4a7abf" font-size="10">棟A</text>
-        <rect x="55"  y="55"  width="28" height="18" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
-        <rect x="93"  y="55"  width="28" height="18" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
-        <rect x="131" y="55"  width="28" height="18" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
-        <rect x="55"  y="83"  width="28" height="18" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
-        <rect x="93"  y="83"  width="28" height="18" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
-        <rect x="131" y="83"  width="28" height="18" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
-        <rect x="55"  y="145" width="28" height="32" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
-        <rect x="131" y="145" width="28" height="32" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="40" y="40" width="150" height="150" rx="2" fill="#c5dcf5" stroke="#4a80c0" stroke-width="2"/>
+        <text x="115" y="105" text-anchor="middle" fill="#1a4a9f" font-size="13" font-weight="bold">第1工場</text>
+        <text x="115" y="123" text-anchor="middle" fill="#2a5aa0" font-size="10">棟A</text>
+        <rect x="55"  y="55"  width="28" height="18" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
+        <rect x="93"  y="55"  width="28" height="18" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
+        <rect x="131" y="55"  width="28" height="18" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
+        <rect x="55"  y="83"  width="28" height="18" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
+        <rect x="93"  y="83"  width="28" height="18" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
+        <rect x="131" y="83"  width="28" height="18" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
+        <rect x="55"  y="145" width="28" height="32" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
+        <rect x="131" y="145" width="28" height="32" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
 
         <!-- 棟B: 第2工場 (組立) -->
-        <rect x="270" y="40" width="360" height="150" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
-        <text x="450" y="95" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">第2工場（組立エリア）</text>
-        <text x="450" y="113" text-anchor="middle" fill="#4a7abf" font-size="10">棟B</text>
-        <line x1="290" y1="145" x2="610" y2="145" stroke="#4a7abf" stroke-width="6" stroke-linecap="round"/>
-        <circle cx="290" cy="145" r="8" fill="none" stroke="#4a7abf" stroke-width="2"/>
-        <circle cx="610" cy="145" r="8" fill="none" stroke="#4a7abf" stroke-width="2"/>
-        <text x="450" y="142" text-anchor="middle" fill="#3a5a8f" font-size="9">コンベアライン</text>
-        <rect x="285" y="55" width="50" height="60" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
-        <rect x="350" y="55" width="50" height="60" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
-        <rect x="415" y="55" width="50" height="60" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
-        <rect x="480" y="55" width="50" height="60" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
-        <rect x="545" y="55" width="50" height="60" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="270" y="40" width="360" height="150" rx="2" fill="#c5dcf5" stroke="#4a80c0" stroke-width="2"/>
+        <text x="450" y="95" text-anchor="middle" fill="#1a4a9f" font-size="13" font-weight="bold">第2工場（組立エリア）</text>
+        <text x="450" y="113" text-anchor="middle" fill="#2a5aa0" font-size="10">棟B</text>
+        <line x1="290" y1="145" x2="610" y2="145" stroke="#4a80c0" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="290" cy="145" r="8" fill="none" stroke="#4a80c0" stroke-width="2"/>
+        <circle cx="610" cy="145" r="8" fill="none" stroke="#4a80c0" stroke-width="2"/>
+        <text x="450" y="142" text-anchor="middle" fill="#5a88c0" font-size="9">コンベアライン</text>
+        <rect x="285" y="55" width="50" height="60" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
+        <rect x="350" y="55" width="50" height="60" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
+        <rect x="415" y="55" width="50" height="60" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
+        <rect x="480" y="55" width="50" height="60" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
+        <rect x="545" y="55" width="50" height="60" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
 
         <!-- 棟C: 倉庫 -->
-        <rect x="710" y="40" width="150" height="150" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
-        <text x="785" y="105" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">倉庫</text>
-        <text x="785" y="123" text-anchor="middle" fill="#4a7abf" font-size="10">棟C</text>
-        <line x1="720" y1="65"  x2="852" y2="65"  stroke="#4a7abf" stroke-width="2"/>
-        <line x1="720" y1="85"  x2="852" y2="85"  stroke="#4a7abf" stroke-width="2"/>
-        <line x1="720" y1="105" x2="852" y2="105" stroke="#4a7abf" stroke-width="2"/>
-        <line x1="720" y1="125" x2="852" y2="125" stroke="#4a7abf" stroke-width="2"/>
-        <line x1="720" y1="145" x2="852" y2="145" stroke="#4a7abf" stroke-width="2"/>
-        <line x1="720" y1="65"  x2="720" y2="175" stroke="#4a7abf" stroke-width="2"/>
-        <line x1="760" y1="65"  x2="760" y2="175" stroke="#4a7abf" stroke-width="2"/>
-        <line x1="810" y1="65"  x2="810" y2="175" stroke="#4a7abf" stroke-width="2"/>
-        <line x1="852" y1="65"  x2="852" y2="175" stroke="#4a7abf" stroke-width="2"/>
+        <rect x="710" y="40" width="150" height="150" rx="2" fill="#c5dcf5" stroke="#4a80c0" stroke-width="2"/>
+        <text x="785" y="105" text-anchor="middle" fill="#1a4a9f" font-size="13" font-weight="bold">倉庫</text>
+        <text x="785" y="123" text-anchor="middle" fill="#2a5aa0" font-size="10">棟C</text>
+        <line x1="720" y1="65"  x2="852" y2="65"  stroke="#4a80c0" stroke-width="2"/>
+        <line x1="720" y1="85"  x2="852" y2="85"  stroke="#4a80c0" stroke-width="2"/>
+        <line x1="720" y1="105" x2="852" y2="105" stroke="#4a80c0" stroke-width="2"/>
+        <line x1="720" y1="125" x2="852" y2="125" stroke="#4a80c0" stroke-width="2"/>
+        <line x1="720" y1="145" x2="852" y2="145" stroke="#4a80c0" stroke-width="2"/>
+        <line x1="720" y1="65"  x2="720" y2="175" stroke="#4a80c0" stroke-width="2"/>
+        <line x1="760" y1="65"  x2="760" y2="175" stroke="#4a80c0" stroke-width="2"/>
+        <line x1="810" y1="65"  x2="810" y2="175" stroke="#4a80c0" stroke-width="2"/>
+        <line x1="852" y1="65"  x2="852" y2="175" stroke="#4a80c0" stroke-width="2"/>
 
         <!-- 棟D: 電気室 -->
-        <rect x="40" y="270" width="150" height="100" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
-        <text x="115" y="318" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">電気室</text>
-        <text x="115" y="335" text-anchor="middle" fill="#4a7abf" font-size="10">棟D</text>
-        <rect x="60" y="280" width="30" height="40" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
-        <rect x="100" y="280" width="30" height="40" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
-        <rect x="140" y="280" width="30" height="40" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="40" y="270" width="150" height="100" rx="2" fill="#c5dcf5" stroke="#4a80c0" stroke-width="2"/>
+        <text x="115" y="318" text-anchor="middle" fill="#1a4a9f" font-size="13" font-weight="bold">電気室</text>
+        <text x="115" y="335" text-anchor="middle" fill="#2a5aa0" font-size="10">棟D</text>
+        <rect x="60" y="280" width="30" height="40" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
+        <rect x="100" y="280" width="30" height="40" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
+        <rect x="140" y="280" width="30" height="40" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
 
         <!-- 棟E: 検査室 -->
-        <rect x="270" y="270" width="160" height="100" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
-        <text x="350" y="315" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">検査室</text>
-        <text x="350" y="332" text-anchor="middle" fill="#4a7abf" font-size="10">棟E</text>
+        <rect x="270" y="270" width="160" height="100" rx="2" fill="#c5dcf5" stroke="#4a80c0" stroke-width="2"/>
+        <text x="350" y="315" text-anchor="middle" fill="#1a4a9f" font-size="13" font-weight="bold">検査室</text>
+        <text x="350" y="332" text-anchor="middle" fill="#2a5aa0" font-size="10">棟E</text>
 
         <!-- 棟F: 塗装工場 -->
-        <rect x="450" y="270" width="180" height="100" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
-        <text x="540" y="315" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">塗装工場</text>
-        <text x="540" y="332" text-anchor="middle" fill="#4a7abf" font-size="10">棟F</text>
+        <rect x="450" y="270" width="180" height="100" rx="2" fill="#c5dcf5" stroke="#4a80c0" stroke-width="2"/>
+        <text x="540" y="315" text-anchor="middle" fill="#1a4a9f" font-size="13" font-weight="bold">塗装工場</text>
+        <text x="540" y="332" text-anchor="middle" fill="#2a5aa0" font-size="10">棟F</text>
 
         <!-- 棟G: 資材置場 -->
-        <rect x="710" y="270" width="150" height="100" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
-        <text x="785" y="315" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">資材置場</text>
-        <text x="785" y="332" text-anchor="middle" fill="#4a7abf" font-size="10">棟G</text>
+        <rect x="710" y="270" width="150" height="100" rx="2" fill="#c5dcf5" stroke="#4a80c0" stroke-width="2"/>
+        <text x="785" y="315" text-anchor="middle" fill="#1a4a9f" font-size="13" font-weight="bold">資材置場</text>
+        <text x="785" y="332" text-anchor="middle" fill="#2a5aa0" font-size="10">棟G</text>
 
         <!-- 棟H: 事務棟 -->
-        <rect x="40" y="450" width="150" height="120" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
-        <text x="115" y="505" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">事務棟</text>
-        <text x="115" y="522" text-anchor="middle" fill="#4a7abf" font-size="10">棟H</text>
+        <rect x="40" y="450" width="150" height="120" rx="2" fill="#c5dcf5" stroke="#4a80c0" stroke-width="2"/>
+        <text x="115" y="505" text-anchor="middle" fill="#1a4a9f" font-size="13" font-weight="bold">事務棟</text>
+        <text x="115" y="522" text-anchor="middle" fill="#2a5aa0" font-size="10">棟H</text>
 
         <!-- 棟I: 第3工場 -->
-        <rect x="270" y="450" width="360" height="120" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
-        <text x="450" y="505" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">第3工場（加工エリア）</text>
-        <text x="450" y="522" text-anchor="middle" fill="#4a7abf" font-size="10">棟I</text>
-        <rect x="285" y="460" width="40" height="50" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
-        <rect x="340" y="460" width="40" height="50" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
-        <rect x="395" y="460" width="40" height="50" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
-        <rect x="450" y="460" width="40" height="50" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
-        <rect x="505" y="460" width="40" height="50" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
-        <rect x="560" y="460" width="40" height="50" rx="2" fill="#2a4a7f" stroke="#4a7abf" stroke-width="1"/>
+        <rect x="270" y="450" width="360" height="120" rx="2" fill="#c5dcf5" stroke="#4a80c0" stroke-width="2"/>
+        <text x="450" y="505" text-anchor="middle" fill="#1a4a9f" font-size="13" font-weight="bold">第3工場（加工エリア）</text>
+        <text x="450" y="522" text-anchor="middle" fill="#2a5aa0" font-size="10">棟I</text>
+        <rect x="285" y="460" width="40" height="50" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
+        <rect x="340" y="460" width="40" height="50" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
+        <rect x="395" y="460" width="40" height="50" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
+        <rect x="450" y="460" width="40" height="50" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
+        <rect x="505" y="460" width="40" height="50" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
+        <rect x="560" y="460" width="40" height="50" rx="2" fill="#a8c4e8" stroke="#4a80c0" stroke-width="1"/>
 
         <!-- 棟J: 搬入口 -->
-        <rect x="710" y="450" width="150" height="120" rx="2" fill="#1e2d50" stroke="#3a6aaf" stroke-width="2"/>
-        <text x="785" y="500" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">駐車場</text>
-        <text x="785" y="518" text-anchor="middle" fill="#6a9fdf" font-size="13" font-weight="bold">搬入口</text>
-        <text x="785" y="535" text-anchor="middle" fill="#4a7abf" font-size="10">棟J</text>
+        <rect x="710" y="450" width="150" height="120" rx="2" fill="#c5dcf5" stroke="#4a80c0" stroke-width="2"/>
+        <text x="785" y="500" text-anchor="middle" fill="#1a4a9f" font-size="13" font-weight="bold">駐車場</text>
+        <text x="785" y="518" text-anchor="middle" fill="#1a4a9f" font-size="13" font-weight="bold">搬入口</text>
+        <text x="785" y="535" text-anchor="middle" fill="#2a5aa0" font-size="10">棟J</text>
 
         <!-- 出入口 -->
         <rect x="390" y="27" width="60" height="6" fill="#e94560" rx="2"/>
@@ -450,7 +450,7 @@
         <text x="420" y="600" text-anchor="middle" fill="#e67e22" font-size="9" font-weight="bold">通用門</text>
 
         <!-- 方位 -->
-        <text x="858" y="595" fill="#4a7abf" font-size="11" text-anchor="end">N ↑</text>
+        <text x="858" y="595" fill="#2a5aa0" font-size="11" text-anchor="end">N ↑</text>
       </svg>
 
       <!-- Markers -->
