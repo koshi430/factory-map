@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(where python:*)",
+      "Bash(where python3:*)",
+      "Bash(where py:*)",
+      "Bash(/c/Users/koshi/AppData/Local/Microsoft/WindowsApps/python.exe --version)",
+      "Bash(cmd /c \"python --version\")",
+      "Bash(cmd /c \"python --version && echo OK\")",
+      "Bash(cmd /c \"node --version && npm --version\")",
+      "Bash(powershell -Command ':*)",
+      "Read(//c/Users/koshi/AppData/Local/**)",
+      "Read(//c/Program Files/**)",
+      "Bash(powershell -Command 'Get-StartApps | Where-Object { $_.Name -like '\\\\''*Claude*'\\\\'' }')",
+      "Bash(git init *)"
+    ]
+  }
+}
